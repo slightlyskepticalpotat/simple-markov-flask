@@ -34,7 +34,7 @@ def markov():
     filename = str(secrets.token_hex(8))
     try:
         request.files.get("training-data").save("/home/chenanthony365/chenanthony-markov/" + filename + ".in")
-        os.system(f"./markov_mod {word_count} {states_used} {temperature} {'/home/chenanthony365/chenanthony-markov/' + filename + '.in'} {'/home/chenanthony365/chenanthony-markov/' + filename + '.out'}")  # actually generate the text
+        os.system(f"/home/chenanthony365/chenanthony-markov/./markov_mod {word_count} {states_used} {temperature} {'/home/chenanthony365/chenanthony-markov/' + filename + '.in'} {'/home/chenanthony365/chenanthony-markov/' + filename + '.out'}")  # actually generate the text
         generated_text = open("/home/chenanthony365/chenanthony-markov/" + filename + ".out", "r").read()
         os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".in")
         os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".out")
