@@ -26,21 +26,30 @@ def markov():
         flash("Non-file fields must be numerical.", "danger")
         return render_template("index.html")
 
-    if not 1 <= word_count <= 65536 or not 1 <= states_used <= 16 or not 0 <= temperature <= 100:
+    if not 1 <= word_count <= 262144 or not 1 <= states_used <= 16 or not 0 <= temperature <= 100:
         flash("Non-file fields must stay within range.", "danger")
         return render_template("index.html")
 
+    generated_text = "Sorry, something went wrong. Please try again."
     filename = str(secrets.token_hex(8))
     try:
         request.files.get("training-data").save(filename + ".in")
-        training_data = open(filename + ".in", "r").read()
+        print(f"./markov_mod {word_count} {states_used} {temperature} {filename + '.in'} {filename + '.out'}")
+        os.system(f"./markov_mod {word_count} {states_used} {temperature} {filename + '.in'} {filename + '.out'}")  # actually generate the text
         os.remove(filename + ".in")
+        generated_text = open(filename + ".out", "r").read()
+        os.remove(filename + ".out")
     except:  # top-quality error handling
-        pass
+        try:
+            os.remove(filename + ".in")
+        except:
+            pass
+        try:
+            os.remove(filename + ".out")
+        except:
+            pass
 
-    generated_text = open(filename + ".out", "r").read()
-    os.remove(filename + ".out")
-    return generated_text
+    return render_template("generated.html", data = generated_text)
 
 if __name__ == "__main__":
     app.run()
