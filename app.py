@@ -5,8 +5,8 @@ from flask import Flask, flash, render_template, request
 app = Flask(__name__)
 
 secret = secrets.token_hex(32)
-with open("/home/chenanthony365/chenanthony-markov/secret_key.txt", "w+") as file:
-    file.write(secret)
+with open("/home/chenanthony365/chenanthony-markov/" + "secret_key.txt", "w+") as file:
+    file.write(secret + "\n")
 app.config["SECRET_KEY"] = secret
 
 @app.route("/", methods = ["GET", "POST"])
@@ -33,19 +33,18 @@ def markov():
     generated_text = "Sorry, something went wrong. Please try again."
     filename = str(secrets.token_hex(8))
     try:
-        request.files.get("training-data").save(filename + ".in")
-        print(f"./markov_mod {word_count} {states_used} {temperature} {filename + '.in'} {filename + '.out'}")
-        os.system(f"./markov_mod {word_count} {states_used} {temperature} {filename + '.in'} {filename + '.out'}")  # actually generate the text
-        os.remove(filename + ".in")
-        generated_text = open(filename + ".out", "r").read()
-        os.remove(filename + ".out")
+        request.files.get("training-data").save("/home/chenanthony365/chenanthony-markov/" + filename + ".in")
+        os.system(f"./markov_mod {word_count} {states_used} {temperature} {'/home/chenanthony365/chenanthony-markov/' + filename + '.in'} {'/home/chenanthony365/chenanthony-markov/' + filename + '.out'}")  # actually generate the text
+        generated_text = open("/home/chenanthony365/chenanthony-markov/" + filename + ".out", "r").read()
+        os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".in")
+        os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".out")
     except:  # top-quality error handling
         try:
-            os.remove(filename + ".in")
+            os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".in")
         except:
             pass
         try:
-            os.remove(filename + ".out")
+            os.remove("/home/chenanthony365/chenanthony-markov/" + filename + ".out")
         except:
             pass
 
