@@ -9,8 +9,7 @@ secret = secrets.token_hex(32)
 with open("/home/chenanthony365/chenanthony-markov/" + "secret_key.txt", "w+") as file:
     file.write(secret + "\n")
 app.config["SECRET_KEY"] = secret
-app.config['HCAPTCHA_SITEKEY'] = os.getenv('HCAPTCHA_SITEKEY')
-app.config['HCAPTCHA_SECRET'] = os.getenv('HCAPTCHA_SECRET')
+app.config.from_object('settings')
 
 @app.route("/", methods = ["GET", "POST"])
 def markov():
